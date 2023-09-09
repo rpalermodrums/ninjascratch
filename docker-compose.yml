@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  backend:
+    build:
+      context: .
+      args:
+        - APP_DIR=${APP_DIR}
+    env_file:
+      - .env
+    ports:
+      - "8000"
+
+  database:
+    container_name: postgres-${IMAGE_TAG-latest}
+    hostname: "postgres"
+    image: postgres:13.4-alpine3.14
+    environment:
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: "Neuroflow"
+      POSTGRES_DB: "postgres"
+      PGDATA: /opt/pgdata
+    ports:
+      - "5432"
+    volumes:
+      - pgdata:/opt/pgdata
+
+  redis:
+    container_name: redis-${IMAGE_TAG-latest}
+    hostname: "redis"
+    image: redis:alpine
+    ports:
+      - "6379"
+
+volumes:
+  pgdata:
+    name: ${IMAGE_TAG-latest}-pgdata

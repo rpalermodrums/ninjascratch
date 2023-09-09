@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "ninjascratch"
+version = "0.1.0"
+description = "A ground-up Django-Ninja API with no boilerplate"
+authors = ["Ryan Palermo"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.10.4"
+django-configurations = "^2.4.1"
+uwsgi = "^2.0.20"
+django = "^4.2.5"
+django-ninja = "^0.22.2"
+psycopg = {extras = ["binary"], version = "^3.1.10"}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
