@@ -6,32 +6,45 @@ services:
       context: .
       args:
         - APP_DIR=${APP_DIR}
+    command: bash docker-entrypoint.sh server
     env_file:
       - .env
     ports:
-      - "8000"
+      - "8000:8000"
+    depends_on:
+      - database
+      - redis
+    networks:
+      - backend-network
+      - db-network
 
   database:
     container_name: postgres-${IMAGE_TAG-latest}
     hostname: "postgres"
     image: postgres:13.4-alpine3.14
     environment:
-      POSTGRES_PASSWORD: "password"
-      POSTGRES_USER: "Neuroflow"
-      POSTGRES_DB: "postgres"
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
       PGDATA: /opt/pgdata
-    ports:
-      - "5432"
     volumes:
       - pgdata:/opt/pgdata
+    networks:
+      - db-network
 
   redis:
     container_name: redis-${IMAGE_TAG-latest}
     hostname: "redis"
     image: redis:alpine
-    ports:
-      - "6379"
+    networks:
+      - backend-network
 
 volumes:
   pgdata:
     name: ${IMAGE_TAG-latest}-pgdata
+
+networks:
+  backend-network:
+    driver: bridge
+  db-network:
+    driver: bridge

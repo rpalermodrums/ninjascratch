@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -10,6 +12,12 @@ class AbstractTimestampedModel(models.Model):
 
     created_at = models.DateTimeField(auto_now=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+
+class AbstractBaseModel(AbstractTimestampedModel):
+    class Meta:
+        abstract = True
+    id = models.UUIDField(primary_key=True, default=uuid4)
 
 
 class Address(models.Model):
@@ -83,5 +91,3 @@ class Todo(AbstractTimestampedModel, models.Model):
     status = models.CharField(choices=TodoStatus.choices, default=TodoStatus.PENDING)
     notes = models.CharField(max_length=512)
     due_date = models.DateField(null=True)
-
-
