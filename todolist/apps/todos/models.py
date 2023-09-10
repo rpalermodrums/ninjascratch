@@ -70,7 +70,7 @@ class Person(AbstractTimestampedModel, AbstractUser, models.Model):
 
 class TodoList(AbstractTimestampedModel, models.Model):
     title = models.CharField(max_length=64)
-    owner = models.ForeignKey(to=Person, on_delete=models.CASCADE, related_name='lists')
+    owner = models.ForeignKey(to=Person, on_delete=models.CASCADE, related_name='lists', null=True)
 
     @cached_property
     def summary(self):
@@ -97,11 +97,11 @@ class Todo(AbstractTimestampedModel, models.Model):
         DISMISSED = 'DISMISSED', _('Dismissed')
 
     list = models.ForeignKey(to=TodoList, on_delete=models.CASCADE, related_name='todo_items')
-    location = models.ForeignKey(to=Address, on_delete=models.DO_NOTHING)
+    location = models.ForeignKey(to=Address, on_delete=models.DO_NOTHING, null=True)
 
     title = models.CharField(max_length=128)
     status = models.CharField(choices=TodoStatus.choices, default=TodoStatus.PENDING)
-    notes = models.CharField(max_length=512)
+    notes = models.CharField(max_length=512, null=True)
     due_date = models.DateField(null=True)
 
     class Meta:

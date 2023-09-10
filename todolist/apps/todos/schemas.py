@@ -12,7 +12,6 @@ class TodoIn(Schema):
 
 
 class TodoOut(Schema):
-    list: int
     id: int
     title: str
     status: str
