@@ -1,23 +1,24 @@
-from uuid import uuid4
-
+from django.contrib.auth.models import AbstractUser, Group, UserManager, Permission
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractUser, Group, UserManager, Permission
+
+from uuid import uuid4
 
 
 class AbstractTimestampedModel(models.Model):
-    class Meta:
-        abstract = True
-
     created_at = models.DateTimeField(auto_now=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-
-class AbstractBaseModel(AbstractTimestampedModel):
     class Meta:
         abstract = True
+
+
+class AbstractBaseModel(AbstractTimestampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4)
+
+    class Meta:
+        abstract = True
 
 
 class Address(models.Model):
@@ -57,6 +58,12 @@ class Person(AbstractTimestampedModel, AbstractUser, models.Model):
 
     objects = UserManager()
 
+    class Meta:
+        db_table = 'people'
+        verbose_name_plural = 'people'
+        ordering = ('-created_at', )
+
+
     def __str__(self):
         return f'{self.first_name} {self.last_name} <{self.email}>'
 
@@ -76,6 +83,11 @@ class TodoList(AbstractTimestampedModel, models.Model):
 
         return status_map
 
+    class Meta:
+        db_table = 'todo_lists'
+        verbose_name_plural = 'todo_lists'
+        ordering = ('-created_at', )
+
 
 class Todo(AbstractTimestampedModel, models.Model):
     class TodoStatus(models.TextChoices):
@@ -91,3 +103,8 @@ class Todo(AbstractTimestampedModel, models.Model):
     status = models.CharField(choices=TodoStatus.choices, default=TodoStatus.PENDING)
     notes = models.CharField(max_length=512)
     due_date = models.DateField(null=True)
+
+    class Meta:
+        db_table = 'todos'
+        verbose_name_plural = 'todos'
+        ordering = ('due_date', '-created_at')

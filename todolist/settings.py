@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Secret Key: Always use the environment variable in production. Never use the default value.
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'default_secret_key')
 # Debug mode: Always turn off in production for security reasons
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
+DEBUG = os.environ.get('DJANGO_DEBUG', '').lower() == 'true'
 # Allowed hosts for the server
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
 
@@ -18,8 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'todolist',
-    'todos',
+    'todolist.apps.todos',
 ]
 
 # Define Django and Third-Party Middleware

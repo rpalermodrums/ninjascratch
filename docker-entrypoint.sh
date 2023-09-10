@@ -33,11 +33,15 @@ sleep 0.1;  # The $COLUMNS variable takes a moment to populate
 case "$1" in
   init|server|"")
     # Start scheduler and webserver in same container
-    cd todolist
     python manage.py migrate
     header "RUNNING MIGRATIONS AND STARTING WSGI SERVER"
     uwsgi --show-config --http :8000 --socket :8002 --module todolist.wsgi:application
     uasgi --show-config  --module todolist.wsgi:application
+    ;;
+  devserver)
+    python manage.py migrate
+    header "RUNNING MIGRATIONS AND STARTING WSGI SERVER"
+    python manage.py runserver 0.0.0.0:8000
     ;;
   *)
     # The command is something like bash. Just run it in the right environment.

@@ -20,8 +20,7 @@ RUN pip install -r requirements.txt
 COPY pyproject.toml poetry.lock poetry.toml ./
 RUN poetry install
 
-COPY docker-entrypoint.sh todolist/manage.py $APP_DIR
-COPY todolist $APP_DIR
+COPY . .
 
 # Ensure the user 'neuroflow' has necessary permissions
 RUN chown -R neuroflow:neuroflow $APP_DIR
