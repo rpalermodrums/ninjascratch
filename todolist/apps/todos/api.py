@@ -2,7 +2,6 @@ from typing import List
 
 from django.contrib.auth.models import User
 from django.db.models import QuerySet
-from django.shortcuts import get_object_or_404
 
 from ninja.pagination import PageNumberPagination
 from ninja_extra import (
@@ -19,6 +18,7 @@ from ninja_jwt.authentication import JWTAuth
 
 from todolist.apps.todos.models import Todo, TodoList
 from todolist.apps.todos.schemas import TodoIn, TodoOut, TodoListSchema
+from todolist.utils import update_from_payload
 
 
 @api_controller(auth=JWTAuth())
@@ -53,10 +53,7 @@ class TodosController(ControllerBase):
     @http_put('/todos/{todo_id}', response=TodoOut, by_alias=True)
     def update_todo(self, request, todo_id: int, payload: TodoIn) -> Todo:
         todo = self.get_object_or_exception(self.get_qs(request.user), id=todo_id)
-        for k, v in payload.dict().items():
-            setattr(todo, k, v)
-        todo.save()
-        return todo
+        return update_from_payload(todo, payload)
 
     @http_delete('/todos/{todo_id}', response=None)
     def delete_todo(self, request, todo_id: int) -> None:
@@ -78,11 +75,7 @@ class TodosController(ControllerBase):
     @http_patch('/todos/lists/{id}', response=TodoListSchema, by_alias=True)
     def partial_update_todo_list(self, request, list_id: int, payload: TodoListSchema) -> TodoList:
         todolist = self.get_object_or_exception(self.get_qs(request.user), id=list_id)
-        for k, v in payload.dict().items():
-            setattr(todolist, k, v)
-
-        todolist.save()
-        return todolist
+        return update_from_payload(todolist, payload)
 
     @http_delete('/todos/lists/{id}', response=None, by_alias=True)
     def delete_todo_list(self, request, list_id: int) -> None:
