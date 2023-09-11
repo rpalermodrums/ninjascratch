@@ -18,6 +18,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
+    'ninja_extra',
+    'ninja_jwt',
+    'todolist.apps.people',
     'todolist.apps.todos',
 ]
 
@@ -81,6 +85,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Define the user model as Person, not the built-in User.
+# AUTH_USER_MODEL = 'people.person'
+
 # Internationalization Settings
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -93,3 +100,7 @@ STATIC_URL = '/static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SHELL_PLUS = 'ipython'
+SHELL_PLUS_PRINT_SQL = True
+SHELL_PLUS_PRINT_SQL_TRUNCATE = 500

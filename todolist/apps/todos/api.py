@@ -1,11 +1,14 @@
+import logging
 from typing import List
 
+from django.shortcuts import get_object_or_404
 from ninja import Router
+from ninja_jwt.authentication import JWTAuth
 
 from todolist.apps.todos.models import Todo, TodoList
 from todolist.apps.todos.schemas import TodoIn, TodoOut
 
-router = Router()
+router = Router(auth=JWTAuth())
 
 
 @router.post('/todos', response=TodoOut)
@@ -17,9 +20,25 @@ def create_todo(request, data: TodoIn) -> Todo:
 
 @router.get('/todos', response=List[TodoOut])
 def list_todos(request, list_id: int = 1) -> List[Todo]:
-    if request.user.id is not None:
-        todo_list_qs = TodoList.objects.filter(owner=request.user.id)
-    else:
-        todo_list_qs = TodoList.objects.all()
-    todo_list, created = todo_list_qs.get_or_create(pk=list_id)
+    todo_list = get_object_or_404(TodoList, id=list_id)
     return todo_list.todo_items
+
+
+@router.get('/todos/{todo_id}', response=TodoOut)
+def get_todo(request, todo_id: int):
+    return get_object_or_404(Todo, id=todo_id)
+
+
+@router.post('/todos', response=TodoOut)
+def create_todo(request, payload):
+    todo = Todo.objects.create(**payload.dict())
+    return todo
+
+
+@router.put('/todos/{todo_id}', response=TodoOut)
+def update_todo(request, todo_id: int, payload):
+    todo = get_object_or_404(Todo, id=todo_id)
+    for attr, value in payload.dict().items():
+        setattr(todo, attr, value)
+    todo.save()
+    return todo
