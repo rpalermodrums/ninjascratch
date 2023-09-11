@@ -19,14 +19,11 @@ from django.urls import path
 
 from ninja_jwt.controller import NinjaJWTDefaultController
 from ninja_extra import NinjaExtraAPI
-# from ninja import NinjaAPI
-# api = NinjaAPI()
 
 from todolist.apps.todos.api import router as todos_router
 
 api = NinjaExtraAPI()
 api.register_controllers(NinjaJWTDefaultController)
-
 
 api.add_router('/todos/', todos_router)
 
