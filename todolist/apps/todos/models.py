@@ -63,7 +63,6 @@ class Person(AbstractTimestampedModel, AbstractUser, models.Model):
         verbose_name_plural = 'people'
         ordering = ('-created_at', )
 
-
     def __str__(self):
         return f'{self.first_name} {self.last_name} <{self.email}>'
 
@@ -83,10 +82,17 @@ class TodoList(AbstractTimestampedModel, models.Model):
 
         return status_map
 
+    @cached_property
+    def todo_items_count(self):
+        return self.todo_items.count()
+
     class Meta:
         db_table = 'todo_lists'
         verbose_name_plural = 'todo_lists'
         ordering = ('-created_at', )
+
+    def __str__(self):
+        return f'{self.id} - {self.title} ({self.todo_items_count} todos)'
 
 
 class Todo(AbstractTimestampedModel, models.Model):
@@ -108,3 +114,6 @@ class Todo(AbstractTimestampedModel, models.Model):
         db_table = 'todos'
         verbose_name_plural = 'todos'
         ordering = ('due_date', '-created_at')
+
+    def __str__(self):
+        return f'{id} - {self.title} ({self.status})'

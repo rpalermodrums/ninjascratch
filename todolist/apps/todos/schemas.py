@@ -1,6 +1,7 @@
 from ninja import ModelSchema
+from ninja.orm import create_schema
 
-from todolist.apps.todos.models import Todo
+from todolist.apps.todos.models import Todo, TodoList
 
 
 def to_camel(string: str) -> str:
@@ -12,7 +13,6 @@ def to_camel(string: str) -> str:
         else:
             camel_string += word.capitalize()
 
-    print(camel_string)
     return camel_string
 
 
@@ -30,4 +30,11 @@ class TodoIn(TodoSchemaBase, ModelSchema):
 class TodoOut(TodoSchemaBase, ModelSchema):
     class Config(TodoSchemaBase.Config):
         model_fields = [*TodoSchemaBase.Config.model_fields, 'id']
+        alias_generator = to_camel
+
+
+class TodoListSchema(ModelSchema):
+    class Config:
+        model = TodoList
+        model_fields = ['title']
         alias_generator = to_camel

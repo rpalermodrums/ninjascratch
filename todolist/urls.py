@@ -20,12 +20,13 @@ from django.urls import path
 from ninja_jwt.controller import NinjaJWTDefaultController
 from ninja_extra import NinjaExtraAPI
 
-from todolist.apps.todos.api import router as todos_router
+from todolist.apps.todos.api import TodosController
 
 api = NinjaExtraAPI()
-api.register_controllers(NinjaJWTDefaultController)
-
-api.add_router('/todos/', todos_router)
+api.register_controllers(
+    NinjaJWTDefaultController,
+    TodosController,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
