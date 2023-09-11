@@ -44,7 +44,7 @@ class TodosController(ControllerBase):
 
     @http_get('/todos/{todo_id}', response=TodoOut, by_alias=True)
     def get_todo(self, request, todo_id: int) -> Todo:
-        return get_object_or_404(self.get_qs(request.user), id=todo_id)
+        return self.get_object_or_exception(self.get_qs(request.user), id=todo_id)
 
     @http_post('/todos', response=TodoOut, by_alias=True)
     def create_todo(self, _request, payload: TodoIn) -> Todo:
@@ -52,7 +52,7 @@ class TodosController(ControllerBase):
 
     @http_put('/todos/{todo_id}', response=TodoOut, by_alias=True)
     def update_todo(self, request, todo_id: int, payload: TodoIn) -> Todo:
-        todo = get_object_or_404(self.get_qs(request.user), id=todo_id)
+        todo = self.get_object_or_exception(self.get_qs(request.user), id=todo_id)
         for k, v in payload.dict().items():
             setattr(todo, k, v)
         todo.save()
