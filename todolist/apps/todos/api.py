@@ -61,22 +61,22 @@ class TodosController(ControllerBase):
 
     @http_get('/todos/lists', response=TodoListSchema, by_alias=True)
     @paginate(PageNumberPagination)
-    def list_todo_lists(self, request):
-        return self.get_qs(request.user)
+    def list_todo_lists(self, request) -> QuerySet[TodoList]:
+        return self.get_list_qs(request.user)
 
-    @http_get('/todos/lists/{id}', response=TodoListSchema, by_alias=True)
-    def get_todo_list(self, request, list_id: int):
+    @http_get('/todos/lists/{list_id}', response=TodoListSchema, by_alias=True)
+    def get_todo_list(self, request, list_id: int) -> TodoList:
         return self.get_object_or_exception(self.get_qs(request.user), id=list_id)
 
     @http_post('/todos/lists', response=TodoListSchema, by_alias=True)
     def create_todo_list(self, request, title: str) -> TodoList:
         return TodoList.objects.create(owner=request.user, title=title)
 
-    @http_patch('/todos/lists/{id}', response=TodoListSchema, by_alias=True)
+    @http_patch('/todos/lists/{list_id}', response=TodoListSchema, by_alias=True)
     def partial_update_todo_list(self, request, list_id: int, payload: TodoListSchema) -> TodoList:
         todolist = self.get_object_or_exception(self.get_qs(request.user), id=list_id)
         return update_from_payload(todolist, payload)
 
-    @http_delete('/todos/lists/{id}', response=None, by_alias=True)
+    @http_delete('/todos/lists/{list_id}', response=None, by_alias=True)
     def delete_todo_list(self, request, list_id: int) -> None:
         self.get_object_or_exception(self.get_qs(request.user), id=list_id).delete()
