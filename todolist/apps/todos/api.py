@@ -1,7 +1,7 @@
-import logging
 from typing import List
 
 from django.shortcuts import get_object_or_404
+
 from ninja import Router
 from ninja_jwt.authentication import JWTAuth
 
@@ -30,13 +30,13 @@ def get_todo(request, todo_id: int):
 
 
 @router.post('/todos', response=TodoOut)
-def create_todo(request, payload):
+def create_todo(request, payload: TodoIn):
     todo = Todo.objects.create(**payload.dict())
     return todo
 
 
 @router.put('/todos/{todo_id}', response=TodoOut)
-def update_todo(request, todo_id: int, payload):
+def update_todo(request, todo_id: int, payload: TodoIn):
     todo = get_object_or_404(Todo, id=todo_id)
     for attr, value in payload.dict().items():
         setattr(todo, attr, value)
