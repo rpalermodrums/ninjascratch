@@ -19,6 +19,7 @@ pydantic = "^1.10.12"
 python = "3.10.4"
 uuid = "^1.30"
 uwsgi = "^2.0.20"
+whitenoise = {extras = ["brotli"], version = "^6.5.0"}
 
 [tool.poetry.group.development.dependencies]
 django-debug-toolbar = "^4.2.0"

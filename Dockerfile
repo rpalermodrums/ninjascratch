@@ -26,15 +26,15 @@ RUN pip install -r requirements.txt
 COPY pyproject.toml poetry.lock poetry.toml ./
 RUN poetry install
 
-# Copy necessary files into the container, ensuring the user 'neuroflow' has necessary permissions
+# Copy necessary files into the container
+COPY manage.py wait-for-db.sh docker-entrypoint.sh ./
+COPY ./todolist $APP_DIR/todolist
+
 # Create static files directory for external builds
-RUN mkdir $APP_DIR/todolist \
-    && mkdir $APP_DIR/todolist/static \
-    && chown -R neuroflow $APP_DIR/todolist/static/
+RUN mkdir todolist/static
 
-COPY --chown=neuroflow manage.py wait-for-db.sh docker-entrypoint.sh ./
-COPY --chown=neuroflow ./todolist $APP_DIR/todolist
-
+# Give non-root user ownership of the working directory
+RUN chown -R neuroflow $APP_DIR
 
 # Change to non-root user
 USER neuroflow
