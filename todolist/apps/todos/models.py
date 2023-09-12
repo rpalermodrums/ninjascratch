@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser, Group, UserManager, Permission
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -34,42 +34,9 @@ class Address(models.Model):
         ordering = ('zip', )
 
 
-class Person(AbstractTimestampedModel, AbstractUser, models.Model):
-    birthdate = models.DateField
-    groups = models.ManyToManyField(
-        Group,
-        verbose_name=_('groups'),
-        blank=True,
-        help_text=_(
-            'The groups this user belongs to. A user will get all permissions '
-            'granted to each of their groups.'
-        ),
-        related_name='person_set',
-        related_query_name='person',
-    )
-    user_permissions = models.ManyToManyField(
-        Permission,
-        verbose_name=_('user permissions'),
-        blank=True,
-        help_text=_('Specific permissions for this user.'),
-        related_name='person_set',
-        related_query_name='person',
-    )
-
-    objects = UserManager()
-
-    class Meta:
-        db_table = 'people'
-        verbose_name_plural = 'people'
-        ordering = ('-created_at', )
-
-    def __str__(self):
-        return f'{self.first_name} {self.last_name} <{self.email}>'
-
-
 class TodoList(AbstractTimestampedModel, models.Model):
     title = models.CharField(max_length=64)
-    owner = models.ForeignKey(to=Person, on_delete=models.CASCADE, related_name='lists', null=True)
+    owner = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='lists', null=True)
 
     @cached_property
     def summary(self):
