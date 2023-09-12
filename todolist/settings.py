@@ -107,6 +107,7 @@ USE_TZ = True
 # Static files settings
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+print('static root', STATIC_ROOT)
 STATIC_URL = '/static/'
 
 # Default primary key field type
