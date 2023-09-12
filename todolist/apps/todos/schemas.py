@@ -1,19 +1,9 @@
+from typing import List
+
 from ninja import ModelSchema
-from ninja.orm import create_schema
+from pydantic.utils import to_camel
 
 from todolist.apps.todos.models import Todo, TodoList
-
-
-def to_camel(string: str) -> str:
-    camel_string = ''
-
-    for i, word in enumerate(string.split('_')):
-        if i == 0:
-            camel_string += word
-        else:
-            camel_string += word.capitalize()
-
-    return camel_string
 
 
 class TodoSchemaBase(ModelSchema):
@@ -33,8 +23,14 @@ class TodoOut(TodoSchemaBase, ModelSchema):
         alias_generator = to_camel
 
 
-class TodoListSchema(ModelSchema):
+class TodoListSchemaBase(ModelSchema):
+    todo_items: List[TodoOut] = []
+
     class Config:
         model = TodoList
-        model_fields = ['title']
+        model_fields = [
+            'id',
+            'owner',
+            'title',
+        ]
         alias_generator = to_camel

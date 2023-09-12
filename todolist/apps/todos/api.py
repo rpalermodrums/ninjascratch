@@ -11,13 +11,12 @@ from ninja_extra import (
     http_get,
     http_patch,
     http_post,
-    http_put,
     paginate,
 )
 from ninja_jwt.authentication import JWTAuth
 
 from todolist.apps.todos.models import Todo, TodoList
-from todolist.apps.todos.schemas import TodoIn, TodoOut, TodoListSchema
+from todolist.apps.todos.schemas import TodoIn, TodoOut, TodoListSchemaBase
 from todolist.utils import update_from_payload
 
 
@@ -45,20 +44,20 @@ class TodosController(ControllerBase):
     def get_todo(self, request, todo_id: int) -> Todo:
         return self.get_object_or_exception(self.get_qs(request.user), id=todo_id)
 
-    @http_get('/todos/lists', response=TodoListSchema, by_alias=True)
+    @http_get('/todos/lists', response=TodoListSchemaBase, by_alias=True)
     @paginate(PageNumberPagination)
     def list_todo_lists(self, request) -> QuerySet[TodoList]:
         return self.get_list_qs(request.user)
 
-    @http_get('/todos/lists/{list_id}', response=TodoListSchema, by_alias=True)
-    def get_todo_list(self, request, list_id: int) -> TodoList:
+    @http_get('/todos/lists/{list_id}', response=TodoListSchemaBase, by_alias=True)
+    def get_todo_list(self, _request, list_id: int) -> TodoList:
         return self.get_todo_list_with_todos(list_id)
 
     @http_post('/todos', response=TodoOut, by_alias=True)
     def create_todo(self, _request, payload: TodoIn) -> Todo:
         return Todo.objects.create(**payload.dict())
 
-    @http_post('/todos/lists', response=TodoListSchema, by_alias=True)
+    @http_post('/todos/lists', response=TodoListSchemaBase, by_alias=True)
     def create_todo_list(self, request, title: str) -> TodoList:
         return TodoList.objects.create(owner=request.user, title=title)
 
@@ -67,8 +66,8 @@ class TodosController(ControllerBase):
         todo = self.get_object_or_exception(self.get_qs(request.user), id=todo_id)
         return update_from_payload(todo, payload)
 
-    @http_patch('/todos/lists/{list_id}', response=TodoListSchema, by_alias=True)
-    def partial_update_todo_list(self, request, list_id: int, payload: TodoListSchema) -> TodoList:
+    @http_patch('/todos/lists/{list_id}', response=TodoListSchemaBase, by_alias=True)
+    def partial_update_todo_list(self, request, list_id: int, payload: TodoListSchemaBase) -> TodoList:
         todolist = self.get_object_or_exception(self.get_qs(request.user), id=list_id)
         return update_from_payload(todolist, payload)
 

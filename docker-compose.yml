@@ -7,6 +7,13 @@ services:
       args:
         - APP_DIR=${APP_DIR}
     command: bash docker-entrypoint.sh server
+    environment:
+      - APP_DIR=${APP_DIR}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
     env_file:
       - .env
     ports:

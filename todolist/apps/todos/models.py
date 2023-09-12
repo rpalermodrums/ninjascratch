@@ -44,16 +44,16 @@ class Person(AbstractTimestampedModel, AbstractUser, models.Model):
             'The groups this user belongs to. A user will get all permissions '
             'granted to each of their groups.'
         ),
-        related_name="person_set",
-        related_query_name="person",
+        related_name='person_set',
+        related_query_name='person',
     )
     user_permissions = models.ManyToManyField(
         Permission,
         verbose_name=_('user permissions'),
         blank=True,
         help_text=_('Specific permissions for this user.'),
-        related_name="person_set",
-        related_query_name="person",
+        related_name='person_set',
+        related_query_name='person',
     )
 
     objects = UserManager()
