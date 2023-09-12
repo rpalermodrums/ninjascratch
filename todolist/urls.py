@@ -21,8 +21,9 @@ from ninja_jwt.controller import NinjaJWTDefaultController
 from ninja_extra import NinjaExtraAPI
 
 from todolist.apps.todos.api import TodosController
+from todolist.apps.todos.urls import drf_router
 
-api = NinjaExtraAPI()
+api = NinjaExtraAPI(urls_namespace='ninja')
 api.register_controllers(
     NinjaJWTDefaultController,
     TodosController,
@@ -31,6 +32,6 @@ api.register_controllers(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
-
     path('api/', api.urls),
+    path('drf/', include(drf_router.urls))
 ]
