@@ -17,7 +17,7 @@ WORKDIR $APP_DIR
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml poetry.lock poetry.toml ./
 RUN poetry install
 
 COPY . .
