@@ -32,6 +32,16 @@ sleep 0.1;  # The $COLUMNS variable takes a moment to populate
 
 case "$1" in
   init|server|"")
+    echo "Waiting for postgres..."
+
+    while ! nc -z "$DB_HOST" "$DB_PORT"; do
+      sleep 0.1
+    done
+
+    echo "PostgreSQL started"
+    exec "$@"
+
+
     # Start scheduler and webserver in same container
     python manage.py migrate
     header "RUNNING MIGRATIONS AND STARTING WSGI SERVER"

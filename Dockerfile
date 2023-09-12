@@ -26,5 +26,5 @@ COPY . .
 RUN chown -R neuroflow:neuroflow $APP_DIR
 
 USER neuroflow
-CMD ["bash", "docker-entrypoint.sh", "server"]
 EXPOSE 8000
+CMD ["bash", "docker-entrypoint.sh", "server"]
