@@ -105,7 +105,10 @@ USE_I18N = False  # Turn off Internationalization since the app will be used as 
 USE_TZ = True
 
 # Static files settings
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
