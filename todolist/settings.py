@@ -71,11 +71,11 @@ REST_FRAMEWORK = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'postgres'),
-        'USER': os.environ.get('DB_USER', 'Neuroflow'),
+        'NAME': os.environ.get('DB_NAME', 'ninjascratchpostgres'),
+        'USER': os.environ.get('DB_USER', 'neuroflow'),
         'PASSWORD': os.environ.get('DB_PASSWORD', 'password'),
-        'HOST': 'postgres',
-        'PORT': '5432',
+        'HOST': os.environ.get('DB_HOST', 'postgres'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
