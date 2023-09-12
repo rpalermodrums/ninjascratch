@@ -28,7 +28,7 @@ sleep 0.1;  # The $COLUMNS variable takes a moment to populate
 
 case "$1" in
   init|server|"")
-    wait-for-db.sh
+    bash wait-for-db.sh
 
     # Start scheduler and webserver in same container
     python manage.py migrate --no-input
