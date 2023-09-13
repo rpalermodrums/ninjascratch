@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     'ninja_extra',
     'ninja_jwt',
     'rest_framework',
-    'todolist.apps.people',
+    'todolist.apps.base',
     'todolist.apps.todos',
 ]
 
