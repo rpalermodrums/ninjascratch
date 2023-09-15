@@ -24,7 +24,7 @@ from todolist.utils import update_from_payload
 class TodosController(ControllerBase):
     @staticmethod
     def get_qs(user: User) -> QuerySet[Todo]:
-        return Todo.objects.get(list__owner=user)
+        return Todo.objects.select_related('list').get(list__owner=user)
 
     @staticmethod
     def get_list_qs(user: User) -> QuerySet[TodoList]:
