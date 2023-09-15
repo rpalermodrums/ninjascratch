@@ -9,6 +9,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'default_secret_key')
 DEBUG = os.environ.get('DJANGO_DEBUG', '').lower() == 'true'
 # Allowed hosts for the server
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # for a 5MB upload limit
 
 # Application definition
 INSTALLED_APPS = [
@@ -109,6 +110,8 @@ USE_TZ = True
 # Static files settings
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR / 'media/')
 
 # Following settings only make sense on production and may break development environments.
 if not DEBUG:

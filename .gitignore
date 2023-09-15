@@ -137,3 +137,6 @@ db.*
 
 # Dev
 docker-compose.override.yml
+
+# Data
+*.csv

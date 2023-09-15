@@ -1,10 +1,15 @@
 from typing import List
+import csv
+from io import StringIO
 
 from django.contrib.auth.models import User
 from django.db.models import QuerySet
 
+from ninja import File
+from ninja.files import UploadedFile
 from ninja.pagination import PageNumberPagination
 from ninja_extra import (
+    Router,
     ControllerBase,
     api_controller,
     http_delete,
@@ -18,6 +23,9 @@ from ninja_jwt.authentication import JWTAuth
 from todolist.apps.todos.models import Todo, TodoList
 from todolist.apps.todos.schemas import TodoIn, TodoOut, TodoListSchemaBase
 from todolist.utils import update_from_payload
+
+
+router = Router()
 
 
 @api_controller(auth=JWTAuth())
@@ -78,3 +86,23 @@ class TodosController(ControllerBase):
     @http_delete('/todos/lists/{list_id}', response=None, by_alias=True)
     def delete_todo_list(self, request, list_id: int) -> None:
         self.get_object_or_exception(self.get_qs(request.user), id=list_id).delete()
+
+
+@router.post('/todos', auth=JWTAuth(), response=list[TodoOut])
+def upload_todos(_request, file: UploadedFile = File(...)):
+    todos = []
+    stringified = StringIO(file.read().decode())
+    reader = csv.DictReader(stringified)
+
+    for row in reader:
+        # NB: PYCHARM BUG - https://youtrack.jetbrains.com/issue/QD-6182
+        # noinspection PyTypeChecker
+        list_id = row['list']
+        todo_list, created = TodoList.objects.get_or_create(id=list_id)
+        if created:
+            todo_list.name = f'Todo List {list_id}'
+            todo_list.save()
+        todo, created = Todo.objects.get_or_create({**row, 'list': todo_list})
+        todos.append(todo)
+
+    return todos
