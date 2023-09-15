@@ -1,12 +1,12 @@
 from django.contrib import admin
-# Register the built-in Group and Permission models from Django's auth system
-# from django.contrib.auth.models import Group, Permission
-from todolist.apps.todos.models import TodoList, Todo  # , Address
+
+from todolist.apps.base.models import Address
+from todolist.apps.todos.models import TodoList, Todo
 
 
-# class AddressInline(admin.TabularInline):
-#     model = Address
-#     verbose_name_plural = 'Location Address'
+class AddressInline(admin.TabularInline):
+    model = Address
+    verbose_name_plural = 'Location Address'
 
 
 @admin.register(TodoList)
@@ -30,4 +30,4 @@ class TodoAdmin(admin.ModelAdmin):
     search_fields = ('title', 'list__title')
     list_filter = ('status', 'list', 'due_date')
     ordering = ('due_date', '-created_at')
-    # inlines = [AddressInline]
+    readonly_fields = ('location',)

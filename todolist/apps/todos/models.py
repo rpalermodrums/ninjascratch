@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import QuerySet
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
@@ -11,7 +12,7 @@ class TodoList(AbstractTimestampedModel, models.Model):
     owner = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='lists', null=True)
 
     @cached_property
-    def summary(self):
+    def summary(self) -> dict[str, int]:
         status_map = {}
         for todo in self.todo_items.all():
             if str(todo.status) in status_map:
@@ -22,8 +23,16 @@ class TodoList(AbstractTimestampedModel, models.Model):
         return status_map
 
     @cached_property
-    def todo_items_count(self):
+    def todo_items_count(self) -> int:
         return self.todo_items.count()
+
+    @classmethod
+    def get_list_qs(cls, user: User) -> QuerySet[super.__class__]:
+        return cls.objects.filter(owner=user)
+
+    @classmethod
+    def get_todo_list_with_todos_qs(cls, list_id: int) -> super.__class__:
+        return cls.objects.prefetch_related('todo_items').get(id=list_id)
 
     class Meta:
         db_table = 'todo_lists'
@@ -42,12 +51,16 @@ class Todo(AbstractTimestampedModel, models.Model):
         DISMISSED = 'DISMISSED', _('Dismissed')
 
     list = models.ForeignKey(to=TodoList, on_delete=models.CASCADE, related_name='todo_items')
-    location = models.ForeignKey(to=Address, on_delete=models.DO_NOTHING, null=True)
+    location = models.OneToOneField(to=Address, on_delete=models.DO_NOTHING, null=True)
 
     title = models.CharField(max_length=128)
     status = models.CharField(choices=TodoStatus.choices, default=TodoStatus.PENDING)
     notes = models.CharField(max_length=512, null=True)
     due_date = models.DateField(null=True)
+
+    @classmethod
+    def get_todo_qs(cls, user: User) -> QuerySet[super]:
+        return cls.objects.select_related('list__owner').get(list__owner=user)
 
     class Meta:
         db_table = 'todos'

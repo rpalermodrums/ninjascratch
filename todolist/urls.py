@@ -20,16 +20,18 @@ from django.urls import path, include
 from ninja_jwt.controller import NinjaJWTDefaultController
 from ninja_extra import NinjaExtraAPI
 
-from todolist.apps.todos.api import TodosController, router as file_upload_router
-from todolist.apps.todos.urls import drf_router
+from todolist.apps.todos.upload_api import router as csv_router
+from todolist.apps.todos.urls import router as drf_router
+from todolist.apps.todos.api import router as todos_router
 
 api = NinjaExtraAPI(urls_namespace='ninja')
+csv_upload_api = NinjaExtraAPI(urls_namespace='upload')
 api.register_controllers(
     NinjaJWTDefaultController,
-    TodosController,
 )
 
-api.add_router('/upload', file_upload_router)
+api.add_router('/upload', csv_router)
+api.add_router('/todos', todos_router)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
