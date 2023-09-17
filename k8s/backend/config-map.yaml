@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  APP_DIR: "/opt/app/"
+  DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1"

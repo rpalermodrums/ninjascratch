@@ -140,3 +140,6 @@ docker-compose.override.yml
 
 # Data
 *.csv
+
+# certs
+k8s/ninjascratch-kubeconfig.yaml
