@@ -4,4 +4,4 @@ metadata:
   name: backend-config
 data:
   APP_DIR: "/opt/app/"
-  DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1"
+  DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,45.79.133.193,45.79.133.5,45.79.133.43"

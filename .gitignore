@@ -142,4 +142,4 @@ docker-compose.override.yml
 *.csv
 
 # certs
-k8s/ninjascratch-kubeconfig.yaml
+k8s/qsk-book-kubeconfig.yaml

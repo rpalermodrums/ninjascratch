@@ -13,7 +13,7 @@ ENV APP_DIR=$APP_DIR \
 RUN useradd -ms /bin/bash neuroflow
 
 # Install build dependencies
-RUN apt-get update -y && apt-get install build-essential python3-dev netcat -y
+RUN apt-get update -y && apt-get install build-essential python3-dev netcat -y curl wget
 
 # Set working directory from env variable
 WORKDIR $APP_DIR

@@ -4,4 +4,4 @@
 *.md
 Dockerfile
 docker-compose*.yml
-k8s/ninjascratch-kubeconfig.yaml
+k8s/qsk-book-kubeconfig.yaml
