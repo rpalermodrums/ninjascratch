@@ -32,7 +32,7 @@ class TodoList(AbstractTimestampedModel, models.Model):
 
     @classmethod
     def get_todo_list_with_todos_qs(cls, list_id: int) -> super.__class__:
-        return cls.objects.prefetch_related('todo_items').get(id=list_id)
+        return cls.objects.prefetch_related('todo_items').filter(id=list_id)
 
     class Meta:
         db_table = 'todo_lists'
@@ -60,7 +60,7 @@ class Todo(AbstractTimestampedModel, models.Model):
 
     @classmethod
     def get_todo_qs(cls, user: User) -> QuerySet[super]:
-        return cls.objects.select_related('list__owner').get(list__owner=user)
+        return cls.objects.select_related('list__owner').filter(list__owner=user)
 
     class Meta:
         db_table = 'todos'
